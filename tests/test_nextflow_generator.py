@@ -11,7 +11,7 @@ import sys
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from nextflow_generator import NextflowGenerator
+from src.nextflow_generator import NextflowGenerator
 
 
 class TestNextflowGenerator(unittest.TestCase):
@@ -251,7 +251,7 @@ class TestNextflowGenerator(unittest.TestCase):
     def test_custom_template(self):
         """Test using custom template."""
         # Create a custom template
-        custom_template = """
+        custom_template = '''
 // Custom template for {{ workflow_info.name }}
 params.custom_param = "default_value"
 
@@ -273,7 +273,7 @@ process custom_process {
 workflow {
     custom_process()
 }
-"""
+'''
         
         with tempfile.NamedTemporaryFile(mode='w', suffix='.nf', delete=False) as f:
             f.write(custom_template)

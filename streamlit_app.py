@@ -20,12 +20,12 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 # Import our modules
 try:
-    from cwl_parser import CWLParser
-    from nextflow_generator import NextflowGenerator
-    from resource_mapper import ResourceMapper
-    from container_handler import ContainerHandler
-    from validation import WorkflowValidator
-    from aws_integration import AWSHealthOmicsIntegration
+    from src.cwl_parser import CWLParser
+    from src.nextflow_generator import NextflowGenerator
+    from src.resource_mapper import ResourceMapper
+    from src.container_handler import ContainerHandler
+    from src.validation import WorkflowValidator
+    from src.aws_integration import AWSHealthOmicsIntegration
 except ImportError as e:
     st.error(f"Failed to import modules: {e}")
     st.stop()
@@ -130,7 +130,7 @@ def main():
         strict_validation = st.checkbox("Strict validation mode", value=False)
     
     # Main content tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📁 Upload & Convert", "👀 Live Preview", "📊 Validation Results", "⚙️ Advanced Features", "📚 Examples"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📁 Upload & Convert", "👀 Live Preview", "📊 Validation Results", "⚙️ Advanced Features", "📖 Docs"])
     
     with tab1:
         upload_and_convert_tab(aws_healthomics, aws_region, optimize_resources, instance_type, 
@@ -146,7 +146,7 @@ def main():
         advanced_features_tab()
     
     with tab5:
-        examples_tab()
+        docs_tab()
 
 def upload_and_convert_tab(aws_healthomics, aws_region, optimize_resources, instance_type, 
                           optimize_containers, run_validation, strict_validation):
@@ -267,6 +267,9 @@ def validation_results_tab():
         return
     
     validation_results = results['validation_results']
+    if not validation_results:
+        st.error("No validation results available (validation may be disabled).")
+        return
     
     # Overall validation status
     col1, col2 = st.columns([1, 2])
@@ -284,6 +287,20 @@ def validation_results_tab():
     
     # Detailed validation results
     display_validation_results(validation_results)
+
+    # Include all steps summary if available from conversion context
+    if 'conversion_results' in st.session_state:
+        process_names = st.session_state['conversion_results'].get('process_names', [])
+        if process_names:
+            st.markdown('<h3 class="section-header">🧩 Workflow Steps</h3>', unsafe_allow_html=True)
+            for name in process_names:
+                with st.expander(f"Process: {name}"):
+                    st.write(f"- Name: {name}")
+                    # Future: add per-step validation or resources when available
+
+    # Raw per-rule scores (for transparency)
+    with st.expander("Raw Rule Scores"):
+        st.code(json.dumps(validation_results.get('scores', {}), indent=2), language='json')
 
 def advanced_features_tab():
     """Advanced features tab."""
@@ -324,46 +341,24 @@ def advanced_features_tab():
         test_aws_connection()
 
 def examples_tab():
-    """Examples tab."""
-    
-    st.markdown('<h2 class="section-header">📚 Example Workflows</h2>', unsafe_allow_html=True)
-    
-    # Example workflows
-    examples = {
-        "RNA-seq Analysis": {
-            "description": "Complete RNA-seq analysis pipeline with quality control, alignment, and quantification",
-            "processes": 5,
-            "inputs": 3,
-            "outputs": 2
-        },
-        "Variant Calling": {
-            "description": "Genomic variant calling pipeline with preprocessing, alignment, and variant detection",
-            "processes": 6,
-            "inputs": 4,
-            "outputs": 3
-        },
-        "Protein Analysis": {
-            "description": "Protein structure prediction and analysis workflow",
-            "processes": 4,
-            "inputs": 2,
-            "outputs": 2
-        }
-    }
-    
-    for name, info in examples.items():
-        with st.expander(f"🧬 {name}"):
-            st.write(f"**Description:** {info['description']}")
-            
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Processes", info['processes'])
-            with col2:
-                st.metric("Inputs", info['inputs'])
-            with col3:
-                st.metric("Outputs", info['outputs'])
-            
-            if st.button(f"Load {name} Example", key=f"load_{name}"):
-                load_example_workflow(name)
+    pass
+
+def docs_tab():
+    """Documentation tab showing README files."""
+    st.markdown('<h2 class="section-header">📖 Documentation</h2>', unsafe_allow_html=True)
+
+    repo_root = Path(__file__).parent
+    readme_file = repo_root / "README.md"
+
+    if not readme_file.exists():
+        st.error(f"Document not found: {readme_file}")
+        return
+
+    try:
+        content = readme_file.read_text(encoding="utf-8")
+        st.markdown(content)
+    except Exception as e:
+        st.error(f"Failed to load document: {e}")
 
 def convert_workflow(cwl_content, filename, aws_healthomics, aws_region, optimize_resources, 
                     instance_type, optimize_containers, run_validation, strict_validation):
@@ -402,7 +397,8 @@ def convert_workflow(cwl_content, filename, aws_healthomics, aws_region, optimiz
         resource_mapping = resource_mapper.map_resources(components)
         
         if optimize_resources:
-            resource_mapping = resource_mapper.optimize_for_aws_instance(instance_type, resource_mapping)
+            # Optimize based on available API: takes components and optional target instance
+            resource_mapping = resource_mapper.optimize_for_aws(components, target_instance_type=instance_type)
         
         # Process containers
         status_text.text("Processing containers...")
@@ -411,7 +407,11 @@ def convert_workflow(cwl_content, filename, aws_healthomics, aws_region, optimiz
         container_specs = container_handler.process_containers(components)
         
         if optimize_containers:
-            container_specs = container_handler.optimize_for_aws_ecr(container_specs)
+            # Use available API to optimize containers for AWS registries
+            container_specs = {
+                name: container_handler._optimize_for_aws(spec)
+                for name, spec in container_specs.items()
+            }
         
         # Generate Nextflow
         status_text.text("Generating Nextflow pipeline...")
@@ -432,6 +432,16 @@ def convert_workflow(cwl_content, filename, aws_healthomics, aws_region, optimiz
             progress_bar.progress(90)
             
             validation_results = validator.validate_nextflow(nextflow_pipeline)
+            # Persist validation report to demo_output with source filename
+            try:
+                output_dir = Path("demo_output")
+                output_dir.mkdir(exist_ok=True)
+                report_text = validator.generate_validation_report(validation_results)
+                header = f"Source file: {filename}\n\n"
+                (output_dir / f"{Path(filename).stem}_validation.txt").write_text(header + report_text, encoding="utf-8")
+            except Exception as _e:
+                # Don't fail conversion on report write errors
+                pass
         
         # Store results
         st.session_state['conversion_results'] = {
@@ -441,7 +451,8 @@ def convert_workflow(cwl_content, filename, aws_healthomics, aws_region, optimiz
             'process_count': len(components.get('processes', {})),
             'input_count': len(components.get('inputs', {})),
             'output_count': len(components.get('outputs', {})),
-            'validation_score': validation_results.get('overall_score', 0) if validation_results else 0
+            'validation_score': validation_results.get('overall_score', 0) if validation_results else 0,
+            'process_names': list(components.get('processes', {}).keys())
         }
         
         progress_bar.progress(100)
@@ -612,6 +623,9 @@ def load_example_workflow(workflow_name):
     """Load example workflow."""
     st.success(f"✅ Loaded {workflow_name} example!")
     # This would load the actual example workflow
+
+def demos_tab():
+    pass
 
 if __name__ == "__main__":
     main()

@@ -17,11 +17,11 @@ from datetime import datetime
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from cwl_parser import CWLParser
-from nextflow_generator import NextflowGenerator
-from resource_mapper import ResourceMapper
-from container_handler import ContainerHandler
-from validation import WorkflowValidator
+from src.cwl_parser import CWLParser
+from src.nextflow_generator import NextflowGenerator
+from src.resource_mapper import ResourceMapper
+from src.container_handler import ContainerHandler
+from src.validation import WorkflowValidator
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

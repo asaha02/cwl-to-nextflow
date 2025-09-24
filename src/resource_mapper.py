@@ -279,29 +279,47 @@ class ResourceMapper:
         return f"{bytes_value} B"
     
     def _parse_memory_string(self, memory_str: str) -> str:
-        """Parse memory string and return in GB format."""
-        
-        memory_str = memory_str.strip().upper()
-        
-        for unit, multiplier in self.memory_units.items():
-            if unit in memory_str:
-                value = float(memory_str.replace(unit, "").strip())
-                bytes_value = value * multiplier
+        """Parse memory string like '1024MB', '1 GB' and return in human format."""
+
+        text = memory_str.strip().upper()
+
+        # Match the longest unit suffix first to avoid 'B' matching 'GB'
+        for unit in sorted(self.memory_units.keys(), key=len, reverse=True):
+            if text.endswith(unit):
+                number_part = text[:-len(unit)].strip()
+                try:
+                    value = float(number_part)
+                except Exception:
+                    return "1 GB"
+                bytes_value = value * self.memory_units[unit]
                 return self._bytes_to_human(bytes_value)
-        
-        return "1 GB"  # Default
+
+        # If no unit suffix, try to interpret as GB numeric
+        try:
+            value = float(text)
+            return f"{value:.1f} GB"
+        except Exception:
+            return "1 GB"
     
     def _parse_memory_gb(self, memory_str: str) -> float:
-        """Parse memory string and return value in GB."""
-        
-        memory_str = memory_str.strip().upper()
-        
-        for unit, multiplier in self.memory_units.items():
-            if unit in memory_str:
-                value = float(memory_str.replace(unit, "").strip())
-                return value * (multiplier / self.memory_units["GB"])
-        
-        return 1.0  # Default
+        """Parse memory string and return value in GB as float."""
+
+        text = memory_str.strip().upper()
+
+        for unit in sorted(self.memory_units.keys(), key=len, reverse=True):
+            if text.endswith(unit):
+                number_part = text[:-len(unit)].strip()
+                try:
+                    value = float(number_part)
+                except Exception:
+                    return 1.0
+                return value * (self.memory_units[unit] / self.memory_units["GB"])
+
+        # If no unit, assume GB
+        try:
+            return float(text)
+        except Exception:
+            return 1.0
     
     def _seconds_to_human(self, seconds: int) -> str:
         """Convert seconds to human-readable format."""

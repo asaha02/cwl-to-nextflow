@@ -1,0 +1,100 @@
+Source file: variant_calling.cwl
+
+Nextflow Workflow Validation Report
+==================================================
+
+Overall Status: ❌ INVALID
+Overall Score: 84.5/100
+
+Issues:
+  ❌ Line 9: Syntax issue - aws {
+  ❌ Line 12: Syntax issue - healthomics {
+  ❌ Line 17: Syntax issue - }
+  ❌ Line 19: Syntax issue - batch {
+  ❌ Line 24: Syntax issue - }
+  ❌ Line 25: Syntax issue - }
+  ❌ Line 44: Syntax issue - process fastqc {
+  ❌ Line 110: Syntax issue - }
+  ❌ Line 111: Syntax issue - process trimmomatic {
+  ❌ Line 179: Syntax issue - }
+  ❌ Line 180: Syntax issue - process bwa_index {
+  ❌ Line 242: Syntax issue - }
+  ❌ Line 243: Syntax issue - process bwa {
+  ❌ Line 311: Syntax issue - }
+  ❌ Line 312: Syntax issue - process markduplicates {
+  ❌ Line 376: Syntax issue - }
+  ❌ Line 377: Syntax issue - process baserecalibrator {
+  ❌ Line 445: Syntax issue - }
+  ❌ Line 446: Syntax issue - process gatk {
+  ❌ Line 514: Syntax issue - }
+  ❌ Line 515: Syntax issue - process gatk_filter {
+  ❌ Line 579: Syntax issue - }
+  ❌ Line 580: Syntax issue - process snpeff {
+  ❌ Line 644: Syntax issue - }
+  ❌ Line 647: Syntax issue - workflow {
+  ❌ Line 670: Syntax issue - .publishDir(
+  ❌ Line 674: Syntax issue - )
+  ❌ Line 677: Syntax issue - .publishDir(
+  ❌ Line 681: Syntax issue - )
+  ❌ Line 684: Syntax issue - .publishDir(
+  ❌ Line 688: Syntax issue - )
+  ❌ Line 691: Syntax issue - .publishDir(
+  ❌ Line 695: Syntax issue - )
+  ❌ Line 698: Syntax issue - .publishDir(
+  ❌ Line 702: Syntax issue - )
+  ❌ Line 703: Syntax issue - }
+  ❌ Line 706: Syntax issue - profiles {
+  ❌ Line 707: Syntax issue - healthomics {
+  ❌ Line 718: Syntax issue - }
+  ❌ Line 720: Syntax issue - healthomics-dev {
+  ❌ Line 725: Syntax issue - }
+  ❌ Line 727: Syntax issue - healthomics-prod {
+  ❌ Line 732: Syntax issue - }
+  ❌ Line 733: Syntax issue - }
+  ❌ Process 'fastqc' has no script defined
+  ❌ Process 'trimmomatic' has no script defined
+  ❌ Process 'bwa_index' has no script defined
+  ❌ Process 'bwa' has no script defined
+  ❌ Process 'markduplicates' has no script defined
+  ❌ Process 'baserecalibrator' has no script defined
+  ❌ Process 'gatk' has no script defined
+  ❌ Process 'gatk_filter' has no script defined
+  ❌ Process 'snpeff' has no script defined
+
+Warnings:
+  ⚠️  Process 'fastqc' has no input defined
+  ⚠️  Process 'fastqc' has no output defined
+  ⚠️  Process 'fastqc' has no container defined
+  ⚠️  Process 'trimmomatic' has no input defined
+  ⚠️  Process 'trimmomatic' has no output defined
+  ⚠️  Process 'trimmomatic' has no container defined
+  ⚠️  Process 'bwa_index' has no input defined
+  ⚠️  Process 'bwa_index' has no output defined
+  ⚠️  Process 'bwa_index' has no container defined
+  ⚠️  Process 'bwa' has no input defined
+  ⚠️  Process 'bwa' has no output defined
+  ⚠️  Process 'bwa' has no container defined
+  ⚠️  Process 'markduplicates' has no input defined
+  ⚠️  Process 'markduplicates' has no output defined
+  ⚠️  Process 'markduplicates' has no container defined
+  ⚠️  Process 'baserecalibrator' has no input defined
+  ⚠️  Process 'baserecalibrator' has no output defined
+  ⚠️  Process 'baserecalibrator' has no container defined
+  ⚠️  Process 'gatk' has no input defined
+  ⚠️  Process 'gatk' has no output defined
+  ⚠️  Process 'gatk' has no container defined
+  ⚠️  Process 'gatk_filter' has no input defined
+  ⚠️  Process 'gatk_filter' has no output defined
+  ⚠️  Process 'gatk_filter' has no container defined
+  ⚠️  Process 'snpeff' has no input defined
+  ⚠️  Process 'snpeff' has no output defined
+  ⚠️  Process 'snpeff' has no container defined
+
+Detailed Scores:
+  syntax: 91.4/100
+  structure: 100.0/100
+  processes: 0.0/100
+  workflow: 100.0/100
+  parameters: 100.0/100
+  containers: 100.0/100
+  aws_healthomics: 100.0/100

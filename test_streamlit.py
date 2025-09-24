@@ -39,31 +39,31 @@ def test_imports():
     
     # Test our custom modules
     try:
-        from cwl_parser import CWLParser
+        from src.cwl_parser import CWLParser
         print("✅ CWL Parser imported successfully")
     except ImportError as e:
         print(f"⚠️  CWL Parser import warning: {e}")
     
     try:
-        from nextflow_generator import NextflowGenerator
+        from src.nextflow_generator import NextflowGenerator
         print("✅ Nextflow Generator imported successfully")
     except ImportError as e:
         print(f"⚠️  Nextflow Generator import warning: {e}")
     
     try:
-        from resource_mapper import ResourceMapper
+        from src.resource_mapper import ResourceMapper
         print("✅ Resource Mapper imported successfully")
     except ImportError as e:
         print(f"⚠️  Resource Mapper import warning: {e}")
     
     try:
-        from container_handler import ContainerHandler
+        from src.container_handler import ContainerHandler
         print("✅ Container Handler imported successfully")
     except ImportError as e:
         print(f"⚠️  Container Handler import warning: {e}")
     
     try:
-        from validation import WorkflowValidator
+        from src.validation import WorkflowValidator
         print("✅ Workflow Validator imported successfully")
     except ImportError as e:
         print(f"⚠️  Workflow Validator import warning: {e}")

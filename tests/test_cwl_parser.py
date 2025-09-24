@@ -12,7 +12,7 @@ import sys
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from cwl_parser import CWLParser
+from src.cwl_parser import CWLParser
 
 
 class TestCWLParser(unittest.TestCase):

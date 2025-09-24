@@ -17,7 +17,6 @@ try:
     from cwltool.context import LoadingContext
     from cwltool.workflow import Workflow
     from cwltool.command_line_tool import CommandLineTool
-    from cwltool.expression import do_eval
     CWLTOOL_AVAILABLE = True
 except ImportError:
     CWLTOOL_AVAILABLE = False
