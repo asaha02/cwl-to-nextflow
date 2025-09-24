@@ -1,0 +1,42 @@
+{
+  "name": "cwl-to-nextflow-migration",
+  "version": "1.0.0",
+  "description": "CWL to AWS HealthOmics Nextflow Migration Toolkit",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "validate-cwl": "cwl-runner --help",
+    "install-cwl": "npm install -g cwltool"
+  },
+  "dependencies": {
+    "cwl-runner": "^1.0.20231201152605",
+    "cwl-ts": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0"
+  },
+  "keywords": [
+    "cwl",
+    "nextflow",
+    "aws",
+    "healthomics",
+    "bioinformatics",
+    "workflow",
+    "migration"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/cwl-to-nextflow.git"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
+
