@@ -1,20 +1,28 @@
 # Core dependencies
-cwltool>=3.1.20231201152605
+# Note: cwltool is optional but recommended for full CWL parsing
+# Install with: pip install cwltool
+# Or: pip install cwltool>=3.1.20231201152605
+
+# YAML processing (ruamel.yaml is preferred, but pyyaml works as fallback)
 ruamel.yaml>=0.17.32
+pyyaml>=6.0.1
+
+# HTTP and AWS
 requests>=2.31.0
 boto3>=1.34.0
 botocore>=1.34.0
 
-# CWL processing
-cwl-utils>=0.25
-schema-salad>=8.4.20231201152605
+# CWL processing (optional - install if you need full CWL validation)
+# cwl-utils>=0.25
+# schema-salad>=8.4.20231201152605
 
 # Nextflow generation
 jinja2>=3.1.2
 pyyaml>=6.0.1
+nextflow>=22.04.0
 
 # AWS HealthOmics
-aws-healthomics>=1.0.0
+amazon-omics-tools
 
 # Validation and testing
 pytest>=7.4.3

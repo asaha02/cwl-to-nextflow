@@ -1,0 +1,80 @@
+Sep-24 10:21:05.223 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nextflow-io/hello
+Sep-24 10:21:05.349 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.04.7
+Sep-24 10:21:05.421 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/asaha/.nextflow/plugins; core-plugins: nf-amazon@2.15.0-patch1,nf-azure@1.16.0-patch1,nf-cloudcache@0.4.3,nf-codecommit@0.2.3,nf-console@1.2.1,nf-google@1.21.1,nf-k8s@1.0.0,nf-tower@1.11.4-patch1,nf-wave@1.12.1
+Sep-24 10:21:05.480 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Sep-24 10:21:05.482 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Sep-24 10:21:05.486 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Sep-24 10:21:05.507 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Sep-24 10:21:05.532 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/asaha/.nextflow/scm
+Sep-24 10:21:05.591 [main] DEBUG nextflow.scm.RepositoryFactory - Found Git repository result: [RepositoryFactory]
+Sep-24 10:21:05.608 [main] INFO  nextflow.cli.CmdRun - Pulling nextflow-io/hello ...
+Sep-24 10:21:05.614 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/hello/contents/nextflow.config
+Sep-24 10:21:07.503 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/hello/contents/main.nf
+Sep-24 10:21:07.879 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/hello
+Sep-24 10:21:08.302 [main] DEBUG nextflow.scm.AssetManager - Pulling nextflow-io/hello -- Using remote clone url: https://github.com/nextflow-io/hello.git
+Sep-24 10:21:13.094 [main] INFO  nextflow.cli.CmdRun -  downloaded from https://github.com/nextflow-io/hello.git
+Sep-24 10:21:13.126 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/asaha/.nextflow/assets/nextflow-io/hello/nextflow.config
+Sep-24 10:21:13.133 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/asaha/.nextflow/assets/nextflow-io/hello/nextflow.config
+Sep-24 10:21:13.159 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/asaha/.nextflow/secrets/store.json
+Sep-24 10:21:13.165 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@5ed5b321] - activable => nextflow.secret.LocalSecretsProvider@5ed5b321
+Sep-24 10:21:13.176 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Sep-24 10:21:13.250 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Sep-24 10:21:13.251 [main] DEBUG nextflow.cli.CmdRun - Launching `https://github.com/nextflow-io/hello` [wise_kay] DSL2 - revision: 2ce0b0e294 [master]
+Sep-24 10:21:13.254 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Sep-24 10:21:13.254 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Sep-24 10:21:13.376 [main] DEBUG nextflow.Session - Session UUID: e56c3412-6212-42cb-bd86-ac527b6129be
+Sep-24 10:21:13.377 [main] DEBUG nextflow.Session - Run name: wise_kay
+Sep-24 10:21:13.377 [main] DEBUG nextflow.Session - Executor pool size: 4
+Sep-24 10:21:13.391 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Sep-24 10:21:13.400 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=12; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Sep-24 10:21:13.432 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.04.7 build 5955
+  Created: 08-09-2025 13:29 UTC (18:59 IDT)
+  System: Linux 6.14.0-29-generic
+  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 21.0.8+9-Ubuntu-0ubuntu124.04.1
+  Encoding: UTF-8 (UTF-8)
+  Process: 291986@asaha-MS-7693 [127.0.1.1]
+  CPUs: 4 - Mem: 7.6 GB (198.7 MB) - Swap: 4 GB (4 GB)
+Sep-24 10:21:13.464 [main] DEBUG nextflow.Session - Work-dir: /mnt/asaha/GenAI/projects/cwl-to-nexflow/work [ext2/ext3]
+Sep-24 10:21:13.465 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/asaha/.nextflow/assets/nextflow-io/hello/bin
+Sep-24 10:21:13.479 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Sep-24 10:21:13.519 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Sep-24 10:21:13.531 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Sep-24 10:21:13.608 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Sep-24 10:21:13.631 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 5; maxThreads: 1000
+Sep-24 10:21:13.842 [main] DEBUG nextflow.Session - Session start
+Sep-24 10:21:14.141 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Sep-24 10:21:14.329 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-24 10:21:14.329 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-24 10:21:14.338 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Sep-24 10:21:14.348 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=4; memory=7.6 GB; capacity=4; pollInterval=100ms; dumpInterval=5m
+Sep-24 10:21:14.352 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Sep-24 10:21:14.390 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'sayHello': maxForks=0; fair=false; array=0
+Sep-24 10:21:14.485 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: sayHello
+Sep-24 10:21:14.490 [main] DEBUG nextflow.Session - Igniting dataflow network (2)
+Sep-24 10:21:14.492 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > sayHello
+Sep-24 10:21:14.493 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_49f5f61f8dfa5f95: /home/asaha/.nextflow/assets/nextflow-io/hello/main.nf
+Sep-24 10:21:14.493 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Sep-24 10:21:14.493 [main] DEBUG nextflow.Session - Session await
+Sep-24 10:21:14.881 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-24 10:21:14.884 [Task submitter] INFO  nextflow.Session - [36/1d8f47] Submitted process > sayHello (3)
+Sep-24 10:21:14.905 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-24 10:21:14.906 [Task submitter] INFO  nextflow.Session - [3b/92e47a] Submitted process > sayHello (1)
+Sep-24 10:21:14.919 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-24 10:21:14.921 [Task submitter] INFO  nextflow.Session - [3d/6dffac] Submitted process > sayHello (2)
+Sep-24 10:21:14.940 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-24 10:21:14.944 [Task submitter] INFO  nextflow.Session - [65/57980a] Submitted process > sayHello (4)
+Sep-24 10:21:14.953 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: sayHello (3); status: COMPLETED; exit: 0; error: -; workDir: /mnt/asaha/GenAI/projects/cwl-to-nexflow/work/36/1d8f47415a271087e2cd0a80224bf9]
+Sep-24 10:21:14.955 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=12; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Sep-24 10:21:14.966 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: sayHello (1); status: COMPLETED; exit: 0; error: -; workDir: /mnt/asaha/GenAI/projects/cwl-to-nexflow/work/3b/92e47a931a39fd2b96e4b3ba06142f]
+Sep-24 10:21:14.988 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: sayHello (2); status: COMPLETED; exit: 0; error: -; workDir: /mnt/asaha/GenAI/projects/cwl-to-nexflow/work/3d/6dffac368cf2ff3ad81ec87f252ae4]
+Sep-24 10:21:15.023 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: sayHello (4); status: COMPLETED; exit: 0; error: -; workDir: /mnt/asaha/GenAI/projects/cwl-to-nexflow/work/65/57980a346f7398c8170fdb8e97a10a]
+Sep-24 10:21:15.042 [main] DEBUG nextflow.Session - Session await > all processes finished
+Sep-24 10:21:15.123 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Sep-24 10:21:15.124 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Sep-24 10:21:15.130 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Sep-24 10:21:15.145 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=4; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=63ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=4; peakMemory=0; ]
+Sep-24 10:21:15.165 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Sep-24 10:21:15.200 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Sep-24 10:21:15.200 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

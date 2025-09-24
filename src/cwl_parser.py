@@ -10,13 +10,32 @@ import yaml
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 
-import cwltool
-from cwltool import load_tool
-from cwltool.context import LoadingContext
-from cwltool.workflow import Workflow
-from cwltool.command_line_tool import CommandLineTool
-from cwltool.expression import do_eval
-from ruamel.yaml import YAML
+# Try to import cwltool modules, but handle gracefully if not available
+try:
+    import cwltool
+    from cwltool import load_tool
+    from cwltool.context import LoadingContext
+    from cwltool.workflow import Workflow
+    from cwltool.command_line_tool import CommandLineTool
+    from cwltool.expression import do_eval
+    CWLTOOL_AVAILABLE = True
+except ImportError:
+    CWLTOOL_AVAILABLE = False
+    # Create dummy classes for when cwltool is not available
+    class LoadingContext:
+        pass
+    class Workflow:
+        pass
+    class CommandLineTool:
+        pass
+
+try:
+    from ruamel.yaml import YAML
+    RUAMEL_YAML_AVAILABLE = True
+except ImportError:
+    RUAMEL_YAML_AVAILABLE = False
+    # Fallback to standard yaml
+    import yaml as std_yaml
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +45,15 @@ class CWLParser:
     
     def __init__(self):
         """Initialize the CWL parser."""
-        self.yaml_loader = YAML(typ='safe')
-        self.loading_context = LoadingContext()
+        if RUAMEL_YAML_AVAILABLE:
+            self.yaml_loader = YAML(typ='safe')
+        else:
+            self.yaml_loader = None
+            
+        if CWLTOOL_AVAILABLE:
+            self.loading_context = LoadingContext()
+        else:
+            self.loading_context = None
         
     def parse_cwl_file(self, cwl_path: str) -> Dict[str, Any]:
         """
@@ -40,6 +66,11 @@ class CWLParser:
             Dictionary containing the parsed CWL workflow
         """
         logger.info(f"Parsing CWL file: {cwl_path}")
+        
+        if not CWLTOOL_AVAILABLE:
+            # Fallback to simple YAML parsing when cwltool is not available
+            logger.warning("cwltool not available, using simple YAML parsing")
+            return self._parse_cwl_yaml_simple(cwl_path)
         
         try:
             # Load the CWL tool/workflow
@@ -65,6 +96,37 @@ class CWLParser:
             
         except Exception as e:
             logger.error(f"Failed to parse CWL file {cwl_path}: {str(e)}")
+            # Fallback to simple YAML parsing
+            logger.warning("Falling back to simple YAML parsing")
+            return self._parse_cwl_yaml_simple(cwl_path)
+    
+    def _parse_cwl_yaml_simple(self, cwl_path: str) -> Dict[str, Any]:
+        """Simple YAML parsing fallback when cwltool is not available."""
+        try:
+            with open(cwl_path, 'r') as f:
+                if RUAMEL_YAML_AVAILABLE and self.yaml_loader:
+                    workflow_data = self.yaml_loader.load(f)
+                else:
+                    workflow_data = yaml.safe_load(f)
+            
+            # Ensure required fields exist
+            if not isinstance(workflow_data, dict):
+                raise ValueError("CWL file must contain a YAML dictionary")
+            
+            # Set defaults for missing fields
+            workflow_data.setdefault("cwlVersion", "v1.0")
+            workflow_data.setdefault("class", "Workflow")
+            workflow_data.setdefault("id", Path(cwl_path).stem)
+            workflow_data.setdefault("inputs", {})
+            workflow_data.setdefault("outputs", {})
+            workflow_data.setdefault("steps", {})
+            workflow_data.setdefault("requirements", [])
+            workflow_data.setdefault("hints", [])
+            
+            return workflow_data
+            
+        except Exception as e:
+            logger.error(f"Failed to parse CWL file as YAML: {str(e)}")
             raise
     
     def extract_components(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:

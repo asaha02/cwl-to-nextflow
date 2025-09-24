@@ -26,7 +26,25 @@ This toolkit provides automated conversion capabilities to migrate CWL workflows
 
 ## Quick Start
 
-### Prerequisites
+### 🌐 Interactive Web Interface (Recommended)
+
+The easiest way to use the toolkit is through the interactive Streamlit web app:
+
+```bash
+# Install Streamlit dependencies
+pip install -r requirements_streamlit.txt
+
+# Launch the web interface
+python run_streamlit.py
+```
+
+The app will open in your browser at `http://localhost:8501` with a user-friendly interface for:
+- Uploading CWL files
+- Converting workflows
+- Previewing results
+- Downloading generated files
+
+### 📋 Prerequisites
 
 - Python 3.8+
 - Node.js 16+ (for CWL reference implementation)

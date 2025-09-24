@@ -1,0 +1,42 @@
+Nextflow Workflow Validation Report
+==================================================
+
+Overall Status: ❌ INVALID
+Overall Score: 64.3/100
+
+Issues:
+  ❌ Line 9: Syntax issue - aws {
+  ❌ Line 12: Syntax issue - healthomics {
+  ❌ Line 17: Syntax issue - }
+  ❌ Line 19: Syntax issue - batch {
+  ❌ Line 24: Syntax issue - }
+  ❌ Line 25: Syntax issue - }
+  ❌ Line 36: Syntax issue - process process_step {
+  ❌ Line 100: Syntax issue - }
+  ❌ Line 103: Syntax issue - workflow {
+  ❌ Line 110: Syntax issue - .publishDir(
+  ❌ Line 114: Syntax issue - )
+  ❌ Line 115: Syntax issue - }
+  ❌ Line 118: Syntax issue - profiles {
+  ❌ Line 119: Syntax issue - healthomics {
+  ❌ Line 130: Syntax issue - }
+  ❌ Line 132: Syntax issue - healthomics-dev {
+  ❌ Line 137: Syntax issue - }
+  ❌ Line 139: Syntax issue - healthomics-prod {
+  ❌ Line 144: Syntax issue - }
+  ❌ Line 145: Syntax issue - }
+  ❌ Process 'process_step' has no script defined
+
+Warnings:
+  ⚠️  Process 'process_step' has no input defined
+  ⚠️  Process 'process_step' has no output defined
+  ⚠️  Process 'process_step' has no container defined
+
+Detailed Scores:
+  syntax: 80.2/100
+  structure: 100.0/100
+  processes: 0.0/100
+  workflow: 20.0/100
+  parameters: 50.0/100
+  containers: 100.0/100
+  aws_healthomics: 100.0/100

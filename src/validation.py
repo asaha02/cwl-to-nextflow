@@ -218,7 +218,7 @@ class WorkflowValidator:
         if processes:
             total_checks = len(processes) * 4  # 4 checks per process
             passed_checks = sum(
-                sum(process_info.values()) - 1  # Subtract 1 for name
+                sum(1 for v in process_info.values() if isinstance(v, bool) and v)
                 for process_info in results["processes"]
             )
             results["score"] = (passed_checks / total_checks) * 100 if total_checks > 0 else 0

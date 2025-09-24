@@ -102,13 +102,39 @@ class NextflowGenerator:
         nextflow_inputs = []
         
         for input_name, input_def in inputs.items():
-            nextflow_input = {
-                "name": input_name,
-                "type": self._map_cwl_type_to_nextflow(input_def["type"]),
-                "description": input_def["description"],
-                "default": input_def.get("default"),
-                "required": input_def["required"]
-            }
+            # Debug logging
+            logger.debug(f"Processing input: {input_name}, type: {type(input_def)}, value: {input_def}")
+            
+            # Handle both string and dictionary input definitions
+            if isinstance(input_def, str):
+                # Simple string input (fallback)
+                nextflow_input = {
+                    "name": input_name,
+                    "type": "string",
+                    "description": f"Input parameter: {input_name}",
+                    "default": None,
+                    "required": True
+                }
+            elif isinstance(input_def, dict):
+                # Dictionary input definition
+                nextflow_input = {
+                    "name": input_name,
+                    "type": self._map_cwl_type_to_nextflow(input_def.get("type", "string")),
+                    "description": input_def.get("description", input_def.get("doc", f"Input parameter: {input_name}")),
+                    "default": input_def.get("default"),
+                    "required": input_def.get("required", input_def.get("default") is None)
+                }
+            else:
+                # Fallback for other types
+                logger.warning(f"Unexpected input definition type for {input_name}: {type(input_def)}")
+                nextflow_input = {
+                    "name": input_name,
+                    "type": "string",
+                    "description": f"Input parameter: {input_name}",
+                    "default": None,
+                    "required": True
+                }
+            
             nextflow_inputs.append(nextflow_input)
         
         return nextflow_inputs
@@ -118,11 +144,33 @@ class NextflowGenerator:
         nextflow_outputs = []
         
         for output_name, output_def in outputs.items():
-            nextflow_output = {
-                "name": output_name,
-                "type": self._map_cwl_type_to_nextflow(output_def["type"]),
-                "description": output_def["description"]
-            }
+            # Debug logging
+            logger.debug(f"Processing output: {output_name}, type: {type(output_def)}, value: {output_def}")
+            
+            # Handle both string and dictionary output definitions
+            if isinstance(output_def, str):
+                # Simple string output (fallback)
+                nextflow_output = {
+                    "name": output_name,
+                    "type": "string",
+                    "description": f"Output parameter: {output_name}"
+                }
+            elif isinstance(output_def, dict):
+                # Dictionary output definition
+                nextflow_output = {
+                    "name": output_name,
+                    "type": self._map_cwl_type_to_nextflow(output_def.get("type", "string")),
+                    "description": output_def.get("description", output_def.get("doc", f"Output parameter: {output_name}"))
+                }
+            else:
+                # Fallback for other types
+                logger.warning(f"Unexpected output definition type for {output_name}: {type(output_def)}")
+                nextflow_output = {
+                    "name": output_name,
+                    "type": "string",
+                    "description": f"Output parameter: {output_name}"
+                }
+            
             nextflow_outputs.append(nextflow_output)
         
         return nextflow_outputs
@@ -137,12 +185,29 @@ class NextflowGenerator:
         nextflow_processes = []
         
         for step_name, step_def in steps.items():
+            # Ensure step_def is a dictionary
+            if not isinstance(step_def, dict):
+                logger.warning(f"Step {step_name} definition is not a dictionary: {type(step_def)}")
+                continue
+            
+            # Get inputs with fallback
+            inputs = step_def.get("inputs", {})
+            if not isinstance(inputs, dict):
+                logger.warning(f"Step {step_name} inputs is not a dictionary: {type(inputs)}")
+                inputs = {}
+            
+            # Get outputs with fallback
+            outputs = step_def.get("outputs", [])
+            if not isinstance(outputs, list):
+                logger.warning(f"Step {step_name} outputs is not a list: {type(outputs)}")
+                outputs = []
+            
             process = {
                 "name": step_name,
                 "container": container_specs.get(step_name, {}).get("image", ""),
                 "resources": resource_mapping.get(step_name, {}),
-                "inputs": self._process_step_inputs(step_def["inputs"]),
-                "outputs": self._process_step_outputs(step_def["outputs"]),
+                "inputs": self._process_step_inputs(inputs),
+                "outputs": self._process_step_outputs(outputs),
                 "script": self._generate_process_script(step_def),
                 "requirements": step_def.get("requirements", []),
                 "hints": step_def.get("hints", [])
@@ -156,12 +221,32 @@ class NextflowGenerator:
         inputs = []
         
         for input_name, input_def in step_inputs.items():
-            input_item = {
-                "name": input_name,
-                "source": input_def.get("source", ""),
-                "value_from": input_def.get("valueFrom"),
-                "link_merge": input_def.get("linkMerge")
-            }
+            # Handle both string and dictionary input definitions
+            if isinstance(input_def, str):
+                # Simple string reference (e.g., "input_file")
+                input_item = {
+                    "name": input_name,
+                    "source": input_def,
+                    "value_from": None,
+                    "link_merge": None
+                }
+            elif isinstance(input_def, dict):
+                # Complex input definition with properties
+                input_item = {
+                    "name": input_name,
+                    "source": input_def.get("source", ""),
+                    "value_from": input_def.get("valueFrom"),
+                    "link_merge": input_def.get("linkMerge")
+                }
+            else:
+                # Fallback for other types
+                input_item = {
+                    "name": input_name,
+                    "source": str(input_def),
+                    "value_from": None,
+                    "link_merge": None
+                }
+            
             inputs.append(input_item)
         
         return inputs
@@ -195,17 +280,32 @@ class NextflowGenerator:
         # Output generation
         """
         
-        return script_template.format(step_name=step_def.get("name", "unknown"))
+        # Handle both string and dictionary step definitions
+        if isinstance(step_def, dict):
+            step_name = step_def.get("name", "unknown")
+        else:
+            step_name = str(step_def) if step_def else "unknown"
+        
+        return script_template.format(step_name=step_name)
     
     def _generate_workflow_logic(self, steps: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate workflow logic for Nextflow."""
         workflow_steps = []
         
         for step_name, step_def in steps.items():
+            # Handle both string and dictionary step definitions
+            if isinstance(step_def, dict):
+                inputs = step_def.get("inputs", {})
+                outputs = step_def.get("outputs", [])
+                inputs_list = list(inputs.keys()) if isinstance(inputs, dict) else []
+            else:
+                inputs_list = []
+                outputs = []
+            
             workflow_step = {
                 "name": step_name,
-                "inputs": list(step_def["inputs"].keys()),
-                "outputs": step_def["outputs"],
+                "inputs": inputs_list,
+                "outputs": outputs if isinstance(outputs, list) else [],
                 "dependencies": self._find_step_dependencies(step_def, steps)
             }
             workflow_steps.append(workflow_step)
@@ -218,10 +318,21 @@ class NextflowGenerator:
         """Find dependencies for a workflow step."""
         dependencies = []
         
-        for input_name, input_def in step_def["inputs"].items():
-            source = input_def.get("source", "")
-            if source and source in all_steps:
-                dependencies.append(source)
+        # Handle both string and dictionary step definitions
+        if isinstance(step_def, dict):
+            inputs = step_def.get("inputs", {})
+            if isinstance(inputs, dict):
+                for input_name, input_def in inputs.items():
+                    # Handle both string and dictionary input definitions
+                    if isinstance(input_def, str):
+                        source = input_def
+                    elif isinstance(input_def, dict):
+                        source = input_def.get("source", "")
+                    else:
+                        source = str(input_def)
+                    
+                    if source and source in all_steps:
+                        dependencies.append(source)
         
         return dependencies
     
