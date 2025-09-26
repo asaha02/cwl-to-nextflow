@@ -150,8 +150,13 @@ class CWLParser:
             "inputs": self._process_inputs(workflow_data.get("inputs", {})),
             "outputs": self._process_outputs(workflow_data.get("outputs", {})),
             "processes": self._process_steps(workflow_data.get("steps", {})),
-            "requirements": self._process_requirements(workflow_data.get("requirements", [])),
-            "hints": self._process_hints(workflow_data.get("hints", [])),
+            # Normalize requirements/hints to list-of-dicts form before processing
+            "requirements": self._process_requirements(
+                self._normalize_req_hint_list(workflow_data.get("requirements", []))
+            ),
+            "hints": self._process_hints(
+                self._normalize_req_hint_list(workflow_data.get("hints", []))
+            ),
             "dependencies": self._extract_dependencies(workflow_data)
         }
         
@@ -268,13 +273,38 @@ class CWLParser:
         processed_inputs = {}
         
         for input_name, input_def in inputs.items():
+            # Accept scalar shorthand like: input: File
+            if isinstance(input_def, (str, list, dict)):
+                if isinstance(input_def, dict):
+                    input_type = self._normalize_type(input_def.get("type", "string"))
+                    description = input_def.get("doc", "")
+                    default_val = input_def.get("default")
+                    input_binding = input_def.get("inputBinding")
+                elif isinstance(input_def, list):
+                    # CWL allows union types; treat as union
+                    input_type = self._normalize_type(input_def)
+                    description = ""
+                    default_val = None
+                    input_binding = None
+                else:  # str
+                    input_type = self._normalize_type(input_def)
+                    description = ""
+                    default_val = None
+                    input_binding = None
+            else:
+                # Unknown shape; fallback to string
+                input_type = "string"
+                description = ""
+                default_val = None
+                input_binding = None
+
             processed_inputs[input_name] = {
                 "name": input_name,
-                "type": self._normalize_type(input_def.get("type", "string")),
-                "description": input_def.get("doc", ""),
-                "default": input_def.get("default"),
-                "required": input_def.get("default") is None,
-                "input_binding": input_def.get("inputBinding")
+                "type": input_type,
+                "description": description,
+                "default": default_val,
+                "required": default_val is None,
+                "input_binding": input_binding
             }
         
         return processed_inputs
@@ -284,11 +314,21 @@ class CWLParser:
         processed_outputs = {}
         
         for output_name, output_def in outputs.items():
+            if isinstance(output_def, dict):
+                out_type = self._normalize_type(output_def.get("type", "File"))
+                description = output_def.get("doc", "")
+                output_binding = output_def.get("outputBinding")
+            else:
+                # Scalar shorthand: output: File
+                out_type = self._normalize_type(output_def)
+                description = ""
+                output_binding = None
+
             processed_outputs[output_name] = {
                 "name": output_name,
-                "type": self._normalize_type(output_def.get("type", "File")),
-                "description": output_def.get("doc", ""),
-                "output_binding": output_def.get("outputBinding")
+                "type": out_type,
+                "description": description,
+                "output_binding": output_binding
             }
         
         return processed_outputs
@@ -384,4 +424,43 @@ class CWLParser:
                 return "union"
         else:
             return "unknown"
+
+    def _normalize_req_hint_list(self, value: Any) -> List[Dict[str, Any]]:
+        """
+        Normalize CWL requirements/hints which may be provided either as a list
+        of dictionaries (canonical) or as a mapping of class-name -> options.
+
+        Examples of mapping form:
+        requirements:
+          ResourceRequirement:
+            coresMin: 1
+        hints:
+          DockerRequirement:
+            dockerPull: image
+        """
+        if isinstance(value, list):
+            # Ensure all entries are dicts; coerce strings to dicts with class
+            normalized: List[Dict[str, Any]] = []
+            for item in value:
+                if isinstance(item, dict):
+                    normalized.append(item)
+                elif isinstance(item, str):
+                    normalized.append({"class": item})
+            return normalized
+        elif isinstance(value, dict):
+            normalized_list: List[Dict[str, Any]] = []
+            for klass, options in value.items():
+                if isinstance(options, dict):
+                    entry = {"class": klass}
+                    entry.update(options)
+                    normalized_list.append(entry)
+                else:
+                    # When options is not a dict (e.g., None or string), just record class
+                    normalized_list.append({"class": klass})
+            return normalized_list
+        elif value is None:
+            return []
+        else:
+            # Unexpected type; best-effort fallback
+            return []
 

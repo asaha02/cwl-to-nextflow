@@ -1,0 +1,41 @@
+Source file: FastQC_quality_check.yaml
+
+Nextflow Workflow Validation Report
+==================================================
+
+Overall Status: ❌ INVALID
+Overall Score: 37.4/100
+
+Issues:
+  ❌ Line 9: Syntax issue - aws {
+  ❌ Line 12: Syntax issue - healthomics {
+  ❌ Line 17: Syntax issue - }
+  ❌ Line 19: Syntax issue - batch {
+  ❌ Line 24: Syntax issue - }
+  ❌ Line 25: Syntax issue - }
+  ❌ Line 36: Syntax issue - workflow {
+  ❌ Line 41: Syntax issue - .publishDir(
+  ❌ Line 45: Syntax issue - )
+  ❌ Line 46: Syntax issue - }
+  ❌ Line 49: Syntax issue - profiles {
+  ❌ Line 50: Syntax issue - healthomics {
+  ❌ Line 61: Syntax issue - }
+  ❌ Line 63: Syntax issue - healthomics-dev {
+  ❌ Line 68: Syntax issue - }
+  ❌ Line 70: Syntax issue - healthomics-prod {
+  ❌ Line 75: Syntax issue - }
+  ❌ Line 76: Syntax issue - }
+  ❌ No processes defined
+
+Warnings:
+  ⚠️  Workflow has no process calls
+  ⚠️  No container specifications found
+
+Detailed Scores:
+  syntax: 66.7/100
+  structure: 50.0/100
+  processes: 0.0/100
+  workflow: 20.0/100
+  parameters: 25.0/100
+  containers: 0.0/100
+  aws_healthomics: 100.0/100

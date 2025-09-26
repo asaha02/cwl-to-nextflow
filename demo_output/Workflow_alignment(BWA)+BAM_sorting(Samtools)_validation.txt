@@ -1,0 +1,50 @@
+Source file: Workflow_alignment(BWA)+BAM_sorting(Samtools).yaml
+
+Nextflow Workflow Validation Report
+==================================================
+
+Overall Status: ❌ INVALID
+Overall Score: 71.4/100
+
+Issues:
+  ❌ Line 9: Syntax issue - aws {
+  ❌ Line 12: Syntax issue - healthomics {
+  ❌ Line 17: Syntax issue - }
+  ❌ Line 19: Syntax issue - batch {
+  ❌ Line 24: Syntax issue - }
+  ❌ Line 25: Syntax issue - }
+  ❌ Line 38: Syntax issue - process bwa_mem {
+  ❌ Line 104: Syntax issue - }
+  ❌ Line 105: Syntax issue - process samtools_sort {
+  ❌ Line 167: Syntax issue - }
+  ❌ Line 170: Syntax issue - workflow {
+  ❌ Line 179: Syntax issue - .publishDir(
+  ❌ Line 183: Syntax issue - )
+  ❌ Line 184: Syntax issue - }
+  ❌ Line 187: Syntax issue - profiles {
+  ❌ Line 188: Syntax issue - healthomics {
+  ❌ Line 199: Syntax issue - }
+  ❌ Line 201: Syntax issue - healthomics-dev {
+  ❌ Line 206: Syntax issue - }
+  ❌ Line 208: Syntax issue - healthomics-prod {
+  ❌ Line 213: Syntax issue - }
+  ❌ Line 214: Syntax issue - }
+  ❌ Process 'bwa_mem' has no script defined
+  ❌ Process 'samtools_sort' has no script defined
+
+Warnings:
+  ⚠️  Process 'bwa_mem' has no input defined
+  ⚠️  Process 'bwa_mem' has no output defined
+  ⚠️  Process 'bwa_mem' has no container defined
+  ⚠️  Process 'samtools_sort' has no input defined
+  ⚠️  Process 'samtools_sort' has no output defined
+  ⚠️  Process 'samtools_sort' has no container defined
+
+Detailed Scores:
+  syntax: 85.1/100
+  structure: 100.0/100
+  processes: 0.0/100
+  workflow: 40.0/100
+  parameters: 75.0/100
+  containers: 100.0/100
+  aws_healthomics: 100.0/100

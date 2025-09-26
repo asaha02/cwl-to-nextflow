@@ -1,0 +1,41 @@
+Source file: bwa-mem.cwl
+
+Nextflow Workflow Validation Report
+==================================================
+
+Overall Status: ❌ INVALID
+Overall Score: 44.9/100
+
+Issues:
+  ❌ Line 9: Syntax issue - aws {
+  ❌ Line 12: Syntax issue - healthomics {
+  ❌ Line 17: Syntax issue - }
+  ❌ Line 19: Syntax issue - batch {
+  ❌ Line 24: Syntax issue - }
+  ❌ Line 25: Syntax issue - }
+  ❌ Line 40: Syntax issue - workflow {
+  ❌ Line 45: Syntax issue - .publishDir(
+  ❌ Line 49: Syntax issue - )
+  ❌ Line 50: Syntax issue - }
+  ❌ Line 53: Syntax issue - profiles {
+  ❌ Line 54: Syntax issue - healthomics {
+  ❌ Line 65: Syntax issue - }
+  ❌ Line 67: Syntax issue - healthomics-dev {
+  ❌ Line 72: Syntax issue - }
+  ❌ Line 74: Syntax issue - healthomics-prod {
+  ❌ Line 79: Syntax issue - }
+  ❌ Line 80: Syntax issue - }
+  ❌ No processes defined
+
+Warnings:
+  ⚠️  Workflow has no process calls
+  ⚠️  No container specifications found
+
+Detailed Scores:
+  syntax: 69.0/100
+  structure: 50.0/100
+  processes: 0.0/100
+  workflow: 20.0/100
+  parameters: 75.0/100
+  containers: 0.0/100
+  aws_healthomics: 100.0/100

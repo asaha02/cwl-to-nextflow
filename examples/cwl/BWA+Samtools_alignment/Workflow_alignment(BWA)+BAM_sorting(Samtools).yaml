@@ -1,0 +1,27 @@
+cwlVersion: v1.0
+class: Workflow
+
+inputs:
+  fastq_1: File
+  fastq_2: File
+  reference: File
+
+steps:
+  bwa_mem:
+    run: bwa-mem.cwl
+    in:
+      fastq_1: fastq_1
+      fastq_2: fastq_2
+      reference: reference
+    out: [sam]
+
+  samtools_sort:
+    run: samtools-sort.cwl
+    in:
+      sam: bwa_mem/sam
+    out: [sorted_bam]
+
+outputs:
+  aligned_bam:
+    type: File
+    outputSource: samtools_sort/sorted_bam
